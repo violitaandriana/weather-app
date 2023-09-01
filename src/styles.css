@@ -1,0 +1,105 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap");
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url("background.jpg");
+  background-size: cover;
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  margin: 0;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+}
+
+.date {
+  width: 40vw;
+}
+
+.date-time {
+  padding: 40px;
+}
+
+.search-bar {
+  padding: 40px;
+  display: flex;
+  width: 100vw;
+  justify-content: flex-end;
+  font-size: 14px;
+}
+
+.search {
+  width: 180px;
+  height: 10px !important;
+  padding: 20px 14px;
+  border-radius: 10px;
+  border: none;
+}
+
+.container {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  gap: 30px;
+}
+
+.day {
+  font-size: 24px;
+}
+
+.temp-num {
+  font-size: 60px;
+}
+
+.weather {
+  margin-top: 6px;
+}
+
+.day, .temp, .city, .weather {
+  line-height: 1.5;
+}
+
+.item {
+  width: 240px;
+  padding: 20px 40px;
+}
+
+.bg-item {
+  padding: 20px 40px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.3); /* Warna putih dengan transparansi 30% */
+  backdrop-filter: blur(16px); /* Sesuaikan nilai blur sesuai dengan kebutuhan Anda */
+}
+
+@media (max-width: 540px) {
+  .header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .search,
+  .date-time {
+    margin: 4px auto;
+    height: 20px;
+  }
+}
+
+@media (max-width: 780px) {
+  .container {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    margin-bottom: 40px;
+  }
+
+  body {
+    background-size: cover;
+  }
+}
