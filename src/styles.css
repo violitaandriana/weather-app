@@ -20,6 +20,7 @@ body {
 
 .date {
   width: 40vw;
+  margin-bottom: 6px;
 }
 
 .date-time {
@@ -31,7 +32,6 @@ body {
   display: flex;
   width: 100vw;
   justify-content: flex-end;
-  font-size: 14px;
 }
 
 .search {
@@ -40,6 +40,8 @@ body {
   padding: 20px 14px;
   border-radius: 10px;
   border: none;
+  font-family: "Inter", sans-serif !important;
+  font-size: 14px;
 }
 
 .container {
@@ -72,10 +74,9 @@ body {
 }
 
 .bg-item {
-  padding: 20px 40px;
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.3); /* Warna putih dengan transparansi 30% */
-  backdrop-filter: blur(16px); /* Sesuaikan nilai blur sesuai dengan kebutuhan Anda */
+  background-color: rgba(255, 255, 255, 0.3); 
+  backdrop-filter: blur(16px); 
 }
 
 @media (max-width: 540px) {

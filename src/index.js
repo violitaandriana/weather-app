@@ -49,21 +49,17 @@ const container = document.createElement("div");
 container.classList.add("container");
 
 const item = document.createElement("div");
+item.classList.add("item");
 item.classList.add("bg-item");
-item.classList.add("backdrop-blur-md");
-item.classList.add("bg-white/30");
-
 const day = document.createElement("span");
 day.classList.add("day");
 day.textContent = 'Friday';
 
 const temp = document.createElement("div");
 temp.classList.add("temp");
-
 const tempNum = document.createElement("span");
 tempNum.classList.add("temp-num");
 tempNum.textContent = '22';
-
 const tempCelcius = document.createElement("span");
 tempCelcius.classList.add("temp-celcius");
 tempCelcius.textContent = '°C';
@@ -74,11 +70,9 @@ city.textContent = 'Paris, France';
 
 const weather = document.createElement("div");
 weather.classList.add("weather");
-
 const weatherIcon = document.createElement("i");
 weatherIcon.classList.add('fa-solid');
 weatherIcon.classList.add('fa-cloud-rain');
-
 const weatherText = document.createElement("span");
 weatherText.textContent = ' Moderate rain';
 
