@@ -1,6 +1,6 @@
 {
-    "extends": ["prettier"],
-    "rules": {
-        "singleQuote": true
-    }
+  "extends": ["prettier"],
+  "rules": {
+    "singleQuote": true
+  }
 }
