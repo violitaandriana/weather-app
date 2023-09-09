@@ -45,7 +45,7 @@ function getForecastDataAPI() {
 }
 
 
-// Header
+// Header - time
 const header = document.createElement("header");
 header.classList.add("header");
 const dateTime = document.createElement("div");
@@ -66,6 +66,7 @@ timeIcon.classList.add('fa-clock');
 const timeText = document.createElement("span");
 timeText.textContent = ' 09.00 AM';
 
+// search form
 const searchForm = document.createElement("form");
 searchForm.setAttribute("name", "search-form");
 searchForm.setAttribute("class", "search-form");
@@ -86,10 +87,7 @@ searchBtn.setAttribute("type", "submit");
 searchBtn.classList.add("search-btn");
 
 searchForm.addEventListener("submit", function(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        console.log(searchForm.elements["input-value"].value);
-    }
+    event.preventDefault();
 })
 
 dateHTML.appendChild(dateIcon);
