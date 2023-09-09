@@ -9,8 +9,8 @@ testBtn.addEventListener('click', () => {
     getForecastDataAPI()
 });
 // JSON
-function getCurrentDataAPI() {
-    fetch('https://api.weatherapi.com/v1/current.json?key=169419ecb1b94c6cb8c154412232908&q=paris', { mode: 'cors' })
+function getCurrentDataAPI(city) {
+    fetch(`https://api.weatherapi.com/v1/current.json?key=169419ecb1b94c6cb8c154412232908&q=${city}`, { mode: 'cors' })
         .then(response => {
             return response.json();
         })
@@ -20,6 +20,7 @@ function getCurrentDataAPI() {
             console.log(current.temp_c);
             console.log(current.condition.text);
             console.log(location.localtime);
+            console.log(current.last_updated);
         })
         .catch(error => {
             console.log(error);
@@ -88,6 +89,8 @@ searchBtn.classList.add("search-btn");
 
 searchForm.addEventListener("submit", function(event) {
     event.preventDefault();
+    const cityInput = searchForm.elements["input-value"].value;
+    getCurrentDataAPI(cityInput);
 })
 
 dateHTML.appendChild(dateIcon);
@@ -137,6 +140,9 @@ weatherIcon.classList.add('fa-solid');
 weatherIcon.classList.add('fa-cloud-rain');
 const weatherText = document.createElement("span");
 weatherText.textContent = ' Moderate rain';
+
+const lastUpdated = document.createElement("div");
+// lastUpdated.textContent = 
 
 temp.appendChild(tempNum)
 temp.appendChild(tempCelcius)
