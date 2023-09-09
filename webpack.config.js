@@ -5,6 +5,7 @@ module.exports = {
   mode: "development",
   entry: {
     index: "./src/index.js",
+    weatherAPI: "./src/weather-api-client.js"
   },
   devtool: "inline-source-map",
   devServer: {
@@ -19,6 +20,7 @@ module.exports = {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
     clean: true,
+    
   },
   module: {
     rules: [

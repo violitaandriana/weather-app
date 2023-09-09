@@ -1,6 +1,9 @@
 import "./styles.css";
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'tailwindcss/tailwind.css';
+import weatherAPI from './weather-api-client.js';
+
+const weatherClient = new weatherAPI('https://api.weatherapi.com/v1', '169419ecb1b94c6cb8c154412232908');
 
 const testBtn = document.createElement('button');
 testBtn.textContent = 'API Data';
@@ -87,10 +90,10 @@ const searchBtn = document.createElement("button");
 searchBtn.setAttribute("type", "submit");
 searchBtn.classList.add("search-btn");
 
-searchForm.addEventListener("submit", function(event) {
+searchForm.addEventListener("submit", function (event) {
     event.preventDefault();
-    const cityInput = searchForm.elements["input-value"].value;
-    getCurrentDataAPI(cityInput);
+    const city = searchForm.elements["input-value"].value;
+    const weatherObj = weatherClient.type('current.json').city(city).getWeather();
 })
 
 dateHTML.appendChild(dateIcon);
