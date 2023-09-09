@@ -44,6 +44,10 @@ body {
   font-size: 14px;
 }
 
+.search-btn {
+  display: none;
+}
+
 .container {
   margin-top: 50px;
   display: flex;

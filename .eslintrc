@@ -1,6 +1,4 @@
 {
-  "extends": ["prettier"],
-  "rules": {
-    "singleQuote": true
-  }
+  "parser": "babel-eslint",
+  "extends": ["prettier"]
 }
