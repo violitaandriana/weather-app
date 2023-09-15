@@ -1,8 +1,55 @@
 import "./styles.css";
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'tailwindcss/tailwind.css';
+import weatherAPI from './weather-api-client.js';
 
-// Header
+const weatherClient = new weatherAPI('https://api.weatherapi.com/v1', '169419ecb1b94c6cb8c154412232908');
+
+const testBtn = document.createElement('button');
+testBtn.textContent = 'API Data';
+testBtn.addEventListener('click', () => {
+    getCurrentDataAPI()
+    getForecastDataAPI()
+});
+// JSON
+function getCurrentDataAPI(city) {
+    fetch(`https://api.weatherapi.com/v1/current.json?key=169419ecb1b94c6cb8c154412232908&q=${city}`, { mode: 'cors' })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            const current = data.current;
+            const location = data.location;
+            console.log(current.temp_c);
+            console.log(current.condition.text);
+            console.log(location.localtime);
+            console.log(current.last_updated);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+function getForecastDataAPI() {
+    fetch('https://api.weatherapi.com/v1/forecast.json?key=169419ecb1b94c6cb8c154412232908&q=paris', { mode: 'cors' })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log(data)
+            // const current = data.current;
+            // const location = data.location;
+            // console.log(current.temp_c);
+            // console.log(current.condition.text);
+            // console.log(location.localtime);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+
+// Header - time
 const header = document.createElement("header");
 header.classList.add("header");
 const dateTime = document.createElement("div");
@@ -23,12 +70,31 @@ timeIcon.classList.add('fa-clock');
 const timeText = document.createElement("span");
 timeText.textContent = ' 09.00 AM';
 
+// search form
+const searchForm = document.createElement("form");
+searchForm.setAttribute("name", "search-form");
+searchForm.setAttribute("class", "search-form");
+searchForm.setAttribute("action", "#");
+// searchForm.setAttribute("onsubmit", "renderWeather();return false");
+
 const searchBar = document.createElement("div");
 searchBar.classList.add("search-bar");
+
 const searchInput = document.createElement("input");
 searchInput.setAttribute("type", "text");
+searchInput.setAttribute("name", "input-value");
 searchInput.setAttribute("placeholder", "Search city ..");
 searchInput.classList.add("search");
+
+const searchBtn = document.createElement("button");
+searchBtn.setAttribute("type", "submit");
+searchBtn.classList.add("search-btn");
+
+searchForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const city = searchForm.elements["input-value"].value;
+    const weatherObj = weatherClient.type('current.json').city(city).getWeather();
+})
 
 dateHTML.appendChild(dateIcon);
 dateHTML.appendChild(dateText);
@@ -37,7 +103,9 @@ timeHTML.appendChild(timeText);
 
 dateTime.appendChild(dateHTML);
 dateTime.appendChild(timeHTML);
-searchBar.appendChild(searchInput);
+searchForm.appendChild(searchInput);
+searchForm.appendChild(searchBtn);
+searchBar.appendChild(searchForm);
 header.appendChild(dateTime);
 header.appendChild(searchBar);
 
@@ -76,6 +144,9 @@ weatherIcon.classList.add('fa-cloud-rain');
 const weatherText = document.createElement("span");
 weatherText.textContent = ' Moderate rain';
 
+const lastUpdated = document.createElement("div");
+// lastUpdated.textContent = 
+
 temp.appendChild(tempNum)
 temp.appendChild(tempCelcius)
 weather.appendChild(weatherIcon);
@@ -87,4 +158,6 @@ item.appendChild(city);
 item.appendChild(weather);
 container.appendChild(item);
 
+// button test
+document.body.appendChild(testBtn);
 document.body.appendChild(container);
