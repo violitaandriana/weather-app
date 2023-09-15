@@ -1,45 +1,39 @@
 import { format } from 'date-fns';
 
 export default class Weather {
-    constructor(city, temp, condition, last_updated, local_time) {
-        this.city = city;
-        this.temp = temp;
-        this.condition = condition;
-        this.last_updated = last_updated;
-        this.local_time = local_time;
-    }
+  constructor(city, temp, condition, last_updated, local_time) {
+    this.city = city;
+    this.temp = temp;
+    this.condition = condition;
+    this.last_updated = last_updated;
+    this.local_time = local_time;
+  }
 
-    setWeatherIcon(condition) {
-        if (this.condition.includes('rain')) {
+  getCity() {
+    return this.city.charAt(0).toUpperCase() + this.city.slice(1);
+  }
 
-        }
-    }
+  getTemp() {
+    return this.temp;
+  }
 
-    getCity() {
-        return this.city.charAt(0).toUpperCase() + this.city.slice(1);
-    }
-    
-    getTemp() {
-        return this.temp;
-    }
+  getCondition() {
+    return this.condition;
+  }
 
-    getCondition() {
-        return this.condition;
-    }
+  getLastUpdated() {
+    return format(new Date(this.last_updated), 'HH:mm');
+  }
 
-    getLastUpdated() {
-        return format(new Date(this.last_updated), 'HH:mm');
-    }
+  getLocalTimeDate() {
+    return format(new Date(this.local_time), 'EEEE, dd MMM yyyy');
+  }
 
-    getLocalTimeDate() {
-        return format(new Date(this.local_time), 'EEEE, dd MMM yyyy');;
-    }
+  getLocalTimeHour() {
+    return format(new Date(this.local_time), 'HH:mm');
+  }
 
-    getLocalTimeHour() {
-        return format(new Date(this.local_time), 'HH:mm');;
-    }
-
-    getLocalTimeDay() {
-        return format(new Date(this.local_time), 'EEEE');;
-    }
+  getLocalTimeDay() {
+    return format(new Date(this.local_time), 'EEEE');
+  }
 }
