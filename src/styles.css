@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap');
 
 * {
   margin: 0;
@@ -6,9 +6,9 @@
 }
 
 body {
-  background-image: url("background.jpg");
+  background-image: url('background.jpg');
   background-size: cover;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 20px;
   margin: 0;
   width: 100%;
@@ -40,7 +40,7 @@ body {
   padding: 20px 14px;
   border-radius: 10px;
   border: none;
-  font-family: "Inter", sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   font-size: 14px;
 }
 
@@ -68,7 +68,10 @@ body {
   margin-top: 6px;
 }
 
-.day, .temp, .city, .weather {
+.day,
+.temp,
+.city,
+.weather {
   line-height: 1.5;
 }
 
@@ -79,8 +82,8 @@ body {
 
 .bg-item {
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.3); 
-  backdrop-filter: blur(16px); 
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px);
 }
 
 @media (max-width: 540px) {

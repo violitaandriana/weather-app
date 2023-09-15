@@ -2,83 +2,36 @@ import "./styles.css";
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'tailwindcss/tailwind.css';
 import weatherAPI from './weather-api-client.js';
+import { container } from "webpack";
 
-const weatherClient = new weatherAPI('https://api.weatherapi.com/v1', '169419ecb1b94c6cb8c154412232908');
-
-const testBtn = document.createElement('button');
-testBtn.textContent = 'API Data';
-testBtn.addEventListener('click', () => {
-    getCurrentDataAPI()
-    getForecastDataAPI()
-});
-// JSON
-function getCurrentDataAPI(city) {
-    fetch(`https://api.weatherapi.com/v1/current.json?key=169419ecb1b94c6cb8c154412232908&q=${city}`, { mode: 'cors' })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            const current = data.current;
-            const location = data.location;
-            console.log(current.temp_c);
-            console.log(current.condition.text);
-            console.log(location.localtime);
-            console.log(current.last_updated);
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
-
-function getForecastDataAPI() {
-    fetch('https://api.weatherapi.com/v1/forecast.json?key=169419ecb1b94c6cb8c154412232908&q=paris', { mode: 'cors' })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            console.log(data)
-            // const current = data.current;
-            // const location = data.location;
-            // console.log(current.temp_c);
-            // console.log(current.condition.text);
-            // console.log(location.localtime);
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
-
-
-// Header - time
+// DOM 
+// Header - Date & Time
 const header = document.createElement("header");
 header.classList.add("header");
 const dateTime = document.createElement("div");
 dateTime.classList.add("date-time");
-const dateHTML = document.createElement("div");
-dateHTML.classList.add("date");
+const dateHeader = document.createElement("div");
+dateHeader.classList.add("date");
 const dateIcon = document.createElement("i");
 dateIcon.classList.add('fa-regular');
 dateIcon.classList.add('fa-calendar');
 const dateText = document.createElement("span");
-dateText.textContent = ' Friday, 30/12/2020';
 
-const timeHTML = document.createElement("div");
-timeHTML.classList.add("time");
+const timeHeader = document.createElement("div");
+timeHeader.classList.add("time");
 const timeIcon = document.createElement("i");
 timeIcon.classList.add('fa-regular');
 timeIcon.classList.add('fa-clock');
 const timeText = document.createElement("span");
-timeText.textContent = ' 09.00 AM';
 
-// search form
+// Header - Search Form
+const searchContainer = document.createElement("div");
+searchContainer.classList.add("search-bar");
+
 const searchForm = document.createElement("form");
 searchForm.setAttribute("name", "search-form");
 searchForm.setAttribute("class", "search-form");
 searchForm.setAttribute("action", "#");
-// searchForm.setAttribute("onsubmit", "renderWeather();return false");
-
-const searchBar = document.createElement("div");
-searchBar.classList.add("search-bar");
 
 const searchInput = document.createElement("input");
 searchInput.setAttribute("type", "text");
@@ -90,74 +43,117 @@ const searchBtn = document.createElement("button");
 searchBtn.setAttribute("type", "submit");
 searchBtn.classList.add("search-btn");
 
-searchForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const city = searchForm.elements["input-value"].value;
-    const weatherObj = weatherClient.type('current.json').city(city).getWeather();
-})
+dateHeader.appendChild(dateIcon);
+dateHeader.appendChild(dateText);
+timeHeader.appendChild(timeIcon);
+timeHeader.appendChild(timeText);
 
-dateHTML.appendChild(dateIcon);
-dateHTML.appendChild(dateText);
-timeHTML.appendChild(timeIcon);
-timeHTML.appendChild(timeText);
-
-dateTime.appendChild(dateHTML);
-dateTime.appendChild(timeHTML);
+dateTime.appendChild(dateHeader);
+dateTime.appendChild(timeHeader);
 searchForm.appendChild(searchInput);
 searchForm.appendChild(searchBtn);
-searchBar.appendChild(searchForm);
+searchContainer.appendChild(searchForm);
 header.appendChild(dateTime);
-header.appendChild(searchBar);
+header.appendChild(searchContainer);
 
 document.body.appendChild(header);
 
+// Initialization
+const weatherClient = new weatherAPI('https://api.weatherapi.com/v1', '169419ecb1b94c6cb8c154412232908');
 
-// Container
-const container = document.createElement("div");
-container.classList.add("container");
+// Default weather = Jakarta
+async function initializeWeather() {
+    const defaultWeather = await weatherClient.city('jakarta').getWeather();
+    displayWeather(defaultWeather);
+}
 
-const item = document.createElement("div");
-item.classList.add("item");
-item.classList.add("bg-item");
-const day = document.createElement("span");
-day.classList.add("day");
-day.textContent = 'Friday';
+// Search city's weather
+searchForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    const city = searchForm.elements["input-value"].value;
+    const weatherObject = await getWeatherObject(city);
+    displayWeather(weatherObject);
+});
 
-const temp = document.createElement("div");
-temp.classList.add("temp");
-const tempNum = document.createElement("span");
-tempNum.classList.add("temp-num");
-tempNum.textContent = '22';
-const tempCelcius = document.createElement("span");
-tempCelcius.classList.add("temp-celcius");
-tempCelcius.textContent = '°C';
+async function getWeatherObject(city) {
+    // return array of objects karena ada 3 days
+    const weatherObj = await weatherClient.city(city).getWeather();
+    return weatherObj;
+}
 
-const city = document.createElement("div");
-city.classList.add("city");
-city.textContent = 'Paris, France';
+function displayWeather(weather) {
+    // Header - date & time
+    dateText.textContent = weather.getLocalTimeDate();
+    timeText.textContent = weather.getLocalTimeHour();
 
-const weather = document.createElement("div");
-weather.classList.add("weather");
-const weatherIcon = document.createElement("i");
-weatherIcon.classList.add('fa-solid');
-weatherIcon.classList.add('fa-cloud-rain');
-const weatherText = document.createElement("span");
-weatherText.textContent = ' Moderate rain';
+    // Container Weather
+    const container = document.createElement("div");
+    container.classList.add("container");
 
-const lastUpdated = document.createElement("div");
-// lastUpdated.textContent = 
+    // loop 3 days
+    // resetWeather(container);
+    const item = document.createElement("div");
+    item.classList.add("item");
+    item.classList.add("bg-item");
+    const day = document.createElement("span");
+    day.classList.add("day");
 
-temp.appendChild(tempNum)
-temp.appendChild(tempCelcius)
-weather.appendChild(weatherIcon);
-weather.appendChild(weatherText);
+    const temp = document.createElement("div");
+    temp.classList.add("temp");
+    const tempNum = document.createElement("span");
+    tempNum.classList.add("temp-num");
+    const tempCelcius = document.createElement("span");
+    tempCelcius.classList.add("temp-celcius");
+    tempCelcius.textContent = '°C';
 
-item.appendChild(day);
-item.appendChild(temp);
-item.appendChild(city);
-item.appendChild(weather);
-container.appendChild(item);
+    const city = document.createElement("div");
+    city.classList.add("city");
 
-// button test
-document.body.appendChild(testBtn);
-document.body.appendChild(container);
+    const weatherHTML = document.createElement("div");
+    weatherHTML.classList.add("weather");
+    const weatherIcon = document.createElement("i");
+    weatherIcon.classList.add('fa-solid');
+    weatherIcon.classList.add('fa-cloud-rain');
+    const weatherCondition = document.createElement("span");
+
+    const lastUpdated = document.createElement("div");
+    lastUpdated.classList.add("last-updated");
+    const lastIcon = document.createElement("i");
+    lastIcon.classList.add('fa-solid');
+    lastIcon.classList.add('fa-clock');
+    const lastText = document.createElement("span");
+
+    
+    day.textContent = weather.getLocalTimeDay();
+    city.textContent = weather.getCity();
+    tempNum.textContent = weather.getTemp();
+
+    // weather icon if else
+
+    weatherCondition.textContent = weather.getCondition();
+    lastText.textContent = weather.getLastUpdated();
+
+
+    temp.appendChild(tempNum)
+    temp.appendChild(tempCelcius)
+    weatherHTML.appendChild(weatherIcon);
+    weatherHTML.appendChild(weatherCondition);
+    lastUpdated.appendChild(lastIcon);
+    lastUpdated.appendChild(lastText);
+    weatherHTML.appendChild(lastUpdated);
+
+    item.appendChild(day);
+    item.appendChild(temp);
+    item.appendChild(city);
+    item.appendChild(weatherHTML);
+    container.appendChild(item);
+
+    document.body.appendChild(container);
+}
+
+// function resetWeather(container) {
+//     container.textContent = '';
+// }
+
+// Main
+initializeWeather();
