@@ -28,6 +28,7 @@ export default class weatherAPI {
       const response = await fetch(this.queryParam, { mode: 'cors' });
       const data = await response.json();
 
+      // Current Day
       const currentDay = data.current;
       const currentWeather = new Weather(
         this.cityParam,
@@ -37,8 +38,8 @@ export default class weatherAPI {
         data.location.localtime,
       );
 
+      // Second Day Forecast
       const days = data.forecast.forecastday;
-      // Array of Forecast Days
       const secondDay = days[1];
       const secondDayWeather = new Weather(
         this.cityParam,
@@ -48,7 +49,7 @@ export default class weatherAPI {
         secondDay.date,
       );
 
-
+      // Third Day Forecast
       const thirdDay = days[2];
       const thirdDayWeather = new Weather(
         this.cityParam,
@@ -58,16 +59,18 @@ export default class weatherAPI {
         thirdDay.date,
       );
 
-      // return object class weather -> temp, condition, localtime, last update, prediksi 2 hari setelah
-      // buat 3 object -> hari ini, besok, lusa
+      // buat 3 objects -> hari ini, besok, lusa
       this.weatherArray.push(currentWeather);
       this.weatherArray.push(secondDayWeather);
       this.weatherArray.push(thirdDayWeather);
-
-
       return this.weatherArray;
     } catch (error) {
       console.log(error.message);
     }
+  }
+
+  // reset agar array di-set kosong sblm diisi array dengan city yang baru
+  resetWeather() {
+    this.weatherArray = [];
   }
 }

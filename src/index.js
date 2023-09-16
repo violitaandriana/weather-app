@@ -3,6 +3,28 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import 'tailwindcss/tailwind.css';
 import weatherAPI from './weather-api-client.js';
 
+// Initialization
+const weatherClient = new weatherAPI(
+    'https://api.weatherapi.com/v1',
+    '169419ecb1b94c6cb8c154412232908',
+);
+
+// Default weather = Jakarta
+async function initializeWeather() {
+    const defaultWeather = await weatherClient.city('jakarta').getWeather();
+    displayWeather(defaultWeather);
+}
+
+async function getWeatherObject(city) {
+    // return array of objects karena ada 3 days 
+    const weatherObj = await weatherClient.city(city).getWeather();
+    return weatherObj;
+}
+
+function resetWeatherDisplay() {
+    container.textContent = '';
+}
+
 // DOM
 // Header - Date & Time
 const header = document.createElement('header');
@@ -57,19 +79,7 @@ header.appendChild(searchContainer);
 
 document.body.appendChild(header);
 
-// Initialization
-const weatherClient = new weatherAPI(
-    'https://api.weatherapi.com/v1',
-    '169419ecb1b94c6cb8c154412232908',
-);
-
-// Default weather = Jakarta
-async function initializeWeather() {
-    const defaultWeather = await weatherClient.city('jakarta').getWeather();
-    displayWeather(defaultWeather);
-}
-
-// Search city's weather
+// If user enter city
 searchForm.addEventListener('submit', async function (event) {
     event.preventDefault();
     const city = searchForm.elements['input-value'].value;
@@ -77,25 +87,20 @@ searchForm.addEventListener('submit', async function (event) {
     displayWeather(weatherObject);
 });
 
-async function getWeatherObject(city) {
-    // return array of objects karena ada 3 days -- !
-    const weatherObj = await weatherClient.city(city).getWeather();
-    return weatherObj;
-}
-
 // Container Weather
 const container = document.createElement('div');
 container.classList.add('container');
 
 function displayWeather(weatherArray) {
-    resetWeather();
+    console.log(weatherArray)
+    resetWeatherDisplay();
 
     // Header - date & time
     dateText.textContent = weatherArray[0].getLocalTimeDate();
     timeText.textContent = weatherArray[0].getLocalTimeHour();
 
     // weatherArray[0] = current day, [1] & [2] = forecast days
-    // loop 3 days !
+    // loop 3 days 
     weatherArray.forEach(weather => {
         const item = document.createElement('div');
         item.classList.add('item');
@@ -170,14 +175,9 @@ function displayWeather(weatherArray) {
         container.appendChild(item);
     });
     document.body.appendChild(container);
+    weatherClient.resetWeather();
 }
 
-// blm jalan
-function resetWeather() {
-    dateText.textContent = '';
-    timeText.textContent = '';
-    container.textContent = '';
-}
 
 // Main
 initializeWeather();

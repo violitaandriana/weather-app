@@ -9,6 +9,7 @@ export default class Weather {
     this.local_time = local_time;
   }
 
+  // Capitalize the first char
   getCity() {
     return this.city.charAt(0).toUpperCase() + this.city.slice(1);
   }
