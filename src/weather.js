@@ -16,9 +16,9 @@ export default class Weather {
     return this;
   }
 
-  // Capitalize the first char
+  // Change into title case
   getCity() {
-    return this.city.charAt(0).toUpperCase() + this.city.slice(1);
+    return this.city.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
   }
 
   getTemp() {
