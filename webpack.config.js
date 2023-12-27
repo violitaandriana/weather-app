@@ -1,26 +1,27 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: "development",
+  mode: 'development',
   entry: {
-    index: "./src/index.js",
-    weatherAPI: "./src/weather-api-client.js"
+    index: './src/index.js',
+    weatherAPI: './src/weather-api-client.js',
+    weather: './src/weather.js',
+    forecast: './src/forecast.js'
   },
-  devtool: "inline-source-map",
+  devtool: 'inline-source-map',
   devServer: {
-    static: "./dist",
+    static: './dist',
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "Weather App",
+      title: 'Weather App',
     }),
   ],
   output: {
-    filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist"),
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
     clean: true,
-    
   },
   module: {
     rules: [
@@ -30,11 +31,11 @@ module.exports = {
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: "asset/resource",
+        type: 'asset/resource',
       },
     ],
   },
   optimization: {
-    runtimeChunk: "single",
+    runtimeChunk: 'single',
   },
 };
