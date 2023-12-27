@@ -1,163 +1,183 @@
-import "./styles.css";
+import './styles.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import 'tailwindcss/tailwind.css';
 import weatherAPI from './weather-api-client.js';
 
-const weatherClient = new weatherAPI('https://api.weatherapi.com/v1', '169419ecb1b94c6cb8c154412232908');
+// Initialization
+const weatherClient = new weatherAPI(
+  'https://api.weatherapi.com/v1',
+  '169419ecb1b94c6cb8c154412232908',
+);
 
-const testBtn = document.createElement('button');
-testBtn.textContent = 'API Data';
-testBtn.addEventListener('click', () => {
-    getCurrentDataAPI()
-    getForecastDataAPI()
-});
-// JSON
-function getCurrentDataAPI(city) {
-    fetch(`https://api.weatherapi.com/v1/current.json?key=169419ecb1b94c6cb8c154412232908&q=${city}`, { mode: 'cors' })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            const current = data.current;
-            const location = data.location;
-            console.log(current.temp_c);
-            console.log(current.condition.text);
-            console.log(location.localtime);
-            console.log(current.last_updated);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+// Default weather = Jakarta
+async function initializeWeather() {
+  const defaultWeather = await weatherClient.city('jakarta').getWeather();
+  displayWeather(defaultWeather);
 }
 
-function getForecastDataAPI() {
-    fetch('https://api.weatherapi.com/v1/forecast.json?key=169419ecb1b94c6cb8c154412232908&q=paris', { mode: 'cors' })
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            console.log(data)
-            // const current = data.current;
-            // const location = data.location;
-            // console.log(current.temp_c);
-            // console.log(current.condition.text);
-            // console.log(location.localtime);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+async function getWeatherObject(city) {
+  // return array of objects karena ada 3 days
+  const weatherObj = await weatherClient.city(city).getWeather();
+  return weatherObj;
 }
 
+function resetWeatherDisplay() {
+  container.textContent = '';
+}
 
-// Header - time
-const header = document.createElement("header");
-header.classList.add("header");
-const dateTime = document.createElement("div");
-dateTime.classList.add("date-time");
-const dateHTML = document.createElement("div");
-dateHTML.classList.add("date");
-const dateIcon = document.createElement("i");
+// DOM
+// Header - Date & Time
+const header = document.createElement('header');
+header.classList.add('header');
+const dateTime = document.createElement('div');
+dateTime.classList.add('date-time');
+const dateHeader = document.createElement('div');
+dateHeader.classList.add('date');
+const dateIcon = document.createElement('i');
 dateIcon.classList.add('fa-regular');
 dateIcon.classList.add('fa-calendar');
-const dateText = document.createElement("span");
-dateText.textContent = ' Friday, 30/12/2020';
+const dateText = document.createElement('span');
 
-const timeHTML = document.createElement("div");
-timeHTML.classList.add("time");
-const timeIcon = document.createElement("i");
+const timeHeader = document.createElement('div');
+timeHeader.classList.add('time');
+const timeIcon = document.createElement('i');
 timeIcon.classList.add('fa-regular');
 timeIcon.classList.add('fa-clock');
-const timeText = document.createElement("span");
-timeText.textContent = ' 09.00 AM';
+const timeText = document.createElement('span');
 
-// search form
-const searchForm = document.createElement("form");
-searchForm.setAttribute("name", "search-form");
-searchForm.setAttribute("class", "search-form");
-searchForm.setAttribute("action", "#");
-// searchForm.setAttribute("onsubmit", "renderWeather();return false");
+// Header - Search Form
+const searchContainer = document.createElement('div');
+searchContainer.classList.add('search-bar');
 
-const searchBar = document.createElement("div");
-searchBar.classList.add("search-bar");
+const searchForm = document.createElement('form');
+searchForm.setAttribute('name', 'search-form');
+searchForm.setAttribute('class', 'search-form');
+searchForm.setAttribute('action', '#');
 
-const searchInput = document.createElement("input");
-searchInput.setAttribute("type", "text");
-searchInput.setAttribute("name", "input-value");
-searchInput.setAttribute("placeholder", "Search city ..");
-searchInput.classList.add("search");
+const searchInput = document.createElement('input');
+searchInput.setAttribute('type', 'text');
+searchInput.setAttribute('name', 'input-value');
+searchInput.setAttribute('placeholder', 'Search city ..');
+searchInput.classList.add('search');
 
-const searchBtn = document.createElement("button");
-searchBtn.setAttribute("type", "submit");
-searchBtn.classList.add("search-btn");
+const searchBtn = document.createElement('button');
+searchBtn.setAttribute('type', 'submit');
+searchBtn.classList.add('search-btn');
 
-searchForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const city = searchForm.elements["input-value"].value;
-    const weatherObj = weatherClient.type('current.json').city(city).getWeather();
-})
+dateHeader.appendChild(dateIcon);
+dateHeader.appendChild(dateText);
+timeHeader.appendChild(timeIcon);
+timeHeader.appendChild(timeText);
 
-dateHTML.appendChild(dateIcon);
-dateHTML.appendChild(dateText);
-timeHTML.appendChild(timeIcon);
-timeHTML.appendChild(timeText);
-
-dateTime.appendChild(dateHTML);
-dateTime.appendChild(timeHTML);
+dateTime.appendChild(dateHeader);
+dateTime.appendChild(timeHeader);
 searchForm.appendChild(searchInput);
 searchForm.appendChild(searchBtn);
-searchBar.appendChild(searchForm);
+searchContainer.appendChild(searchForm);
 header.appendChild(dateTime);
-header.appendChild(searchBar);
+header.appendChild(searchContainer);
 
 document.body.appendChild(header);
 
+// If user enter city
+searchForm.addEventListener('submit', async function (event) {
+  event.preventDefault();
+  const city = searchForm.elements['input-value'].value;
+  const weatherObject = await getWeatherObject(city);
+  displayWeather(weatherObject);
+});
 
-// Container
-const container = document.createElement("div");
-container.classList.add("container");
+// Container Weather
+const container = document.createElement('div');
+container.classList.add('container');
 
-const item = document.createElement("div");
-item.classList.add("item");
-item.classList.add("bg-item");
-const day = document.createElement("span");
-day.classList.add("day");
-day.textContent = 'Friday';
+// 
+function displayWeather(weatherMap) {
+  console.log(weatherMap);
+  resetWeatherDisplay();
 
-const temp = document.createElement("div");
-temp.classList.add("temp");
-const tempNum = document.createElement("span");
-tempNum.classList.add("temp-num");
-tempNum.textContent = '22';
-const tempCelcius = document.createElement("span");
-tempCelcius.classList.add("temp-celcius");
-tempCelcius.textContent = '°C';
+  // Header - date & time
+  dateText.textContent = weatherMap.get('today').getLocalTimeDate();
+  timeText.textContent = weatherMap.get('today').getLocalTimeHour();
 
-const city = document.createElement("div");
-city.classList.add("city");
-city.textContent = 'Paris, France';
+  // weatherArray[0] = current day, [1] & [2] = forecast days
+  // loop 3 days, bisa dijadiin function sendiri
+  weatherMap.forEach((weather) => {
+    const item = document.createElement('div');
+    item.classList.add('item');
+    item.classList.add('bg-item');
+    const day = document.createElement('span');
+    day.classList.add('day');
 
-const weather = document.createElement("div");
-weather.classList.add("weather");
-const weatherIcon = document.createElement("i");
-weatherIcon.classList.add('fa-solid');
-weatherIcon.classList.add('fa-cloud-rain');
-const weatherText = document.createElement("span");
-weatherText.textContent = ' Moderate rain';
+    const temp = document.createElement('div');
+    temp.classList.add('temp');
+    const tempNum = document.createElement('span');
+    tempNum.classList.add('temp-num');
+    const tempCelcius = document.createElement('span');
+    tempCelcius.classList.add('temp-celcius');
+    tempCelcius.textContent = '°C';
 
-const lastUpdated = document.createElement("div");
-// lastUpdated.textContent = 
+    const city = document.createElement('div');
+    city.classList.add('city');
 
-temp.appendChild(tempNum)
-temp.appendChild(tempCelcius)
-weather.appendChild(weatherIcon);
-weather.appendChild(weatherText);
+    const weatherHTML = document.createElement('div');
+    weatherHTML.classList.add('weather');
+    const weatherIcon = document.createElement('i');
+    weatherIcon.classList.add('fa-solid');
+    const weatherCondition = document.createElement('span');
 
-item.appendChild(day);
-item.appendChild(temp);
-item.appendChild(city);
-item.appendChild(weather);
-container.appendChild(item);
+    const lastUpdated = document.createElement('div');
+    lastUpdated.classList.add('last-updated');
+    const lastIcon = document.createElement('i');
+    lastIcon.classList.add('fa-solid');
+    lastIcon.classList.add('fa-clock');
+    const lastText = document.createElement('span');
 
-// button test
-document.body.appendChild(testBtn);
-document.body.appendChild(container);
+    // Get data from object
+    day.textContent = weather.getLocalTimeDay();
+    city.textContent = weather.getCity();
+    tempNum.textContent = weather.getTemp();
+    weatherCondition.textContent = weather.getCondition();
+    const cuaca = weatherCondition.textContent.toLowerCase();
+    switch (true) {
+      case cuaca.includes('cloud') || cuaca.includes('overcast'):
+        weatherIcon.classList.add('fa-cloud');
+        break;
+      case cuaca.includes('sunny') || cuaca.includes('clear'):
+        weatherIcon.classList.add('fa-sun');
+        break;
+      case cuaca.includes('rain') || cuaca.includes('drizzle'):
+        weatherIcon.classList.add('fa-cloud-rain');
+        break;
+      case cuaca.includes('snow') || cuaca.includes('blizzard'):
+        weatherIcon.classList.add('fa-snowflake');
+        break;
+      case cuaca.includes('thunder'):
+        weatherIcon.classList.add('fa-cloud-bolt');
+        break;
+      default:
+        weatherIcon.classList.add('fa-smog');
+        break;
+    }
+    // lastText.textContent = weather.getLastUpdated();
+
+    temp.appendChild(tempNum);
+    temp.appendChild(tempCelcius);
+    weatherHTML.appendChild(weatherIcon);
+    weatherHTML.appendChild(weatherCondition);
+    // lastUpdated.appendChild(lastIcon);
+    // lastUpdated.appendChild(lastText);
+    weatherHTML.appendChild(lastUpdated);
+
+    item.appendChild(day);
+    item.appendChild(temp);
+    item.appendChild(city);
+    item.appendChild(weatherHTML);
+    container.appendChild(item);
+  });
+  document.body.appendChild(container);
+  weatherClient.resetWeather();
+}
+
+// Main
+initializeWeather();
