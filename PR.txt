@@ -1,3 +1,0 @@
-Bikin class weather data object buat nampung hasil dari weatherAPI.getWeather().
-tampilin hasil ke index.html
-

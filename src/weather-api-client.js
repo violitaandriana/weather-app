@@ -1,4 +1,5 @@
 import Weather from './weather.js';
+import Forecast from './forecast.js';
 
 export default class weatherAPI {
   constructor(url, key) {
@@ -6,7 +7,7 @@ export default class weatherAPI {
     this.key = key;
     this.queryParam = '';
     this.cityParam = '';
-    this.weatherArray = [];
+    this.weatherMap = new Map();
   }
 
   // builder function
@@ -29,41 +30,23 @@ export default class weatherAPI {
       const data = await response.json();
 
       // Current Day
-      const currentDay = data.current;
-      const currentWeather = new Weather(
-        this.cityParam,
-        currentDay.temp_c,
-        currentDay.condition.text,
-        currentDay.last_updated,
-        data.location.localtime,
-      );
+      const currentWeather = new Weather(this.cityParam, data);
 
-      // Second Day Forecast
       const days = data.forecast.forecastday;
+      // Second Day Forecast
       const secondDay = days[1];
-      const secondDayWeather = new Weather(
-        this.cityParam,
-        secondDay.day.avgtemp_c,
-        secondDay.day.condition.text,
-        currentDay.last_updated,
-        secondDay.date,
-      );
+      const secondDayWeather = new Forecast(this.cityParam, secondDay);
 
       // Third Day Forecast
       const thirdDay = days[2];
-      const thirdDayWeather = new Weather(
-        this.cityParam,
-        thirdDay.day.avgtemp_c,
-        thirdDay.day.condition.text,
-        currentDay.last_updated,
-        thirdDay.date,
-      );
+      const thirdDayWeather = new Forecast(this.cityParam, thirdDay);
 
       // buat 3 objects -> hari ini, besok, lusa
-      this.weatherArray.push(currentWeather);
-      this.weatherArray.push(secondDayWeather);
-      this.weatherArray.push(thirdDayWeather);
-      return this.weatherArray;
+      this.weatherMap.set('today', currentWeather);
+      this.weatherMap.set('tomorrow', secondDayWeather);
+      this.weatherMap.set('afterTomorrow', thirdDayWeather);
+
+      return this.weatherMap;
     } catch (error) {
       console.log(error.message);
     }
@@ -71,6 +54,6 @@ export default class weatherAPI {
 
   // reset agar array di-set kosong sblm diisi array dengan city yang baru
   resetWeather() {
-    this.weatherArray = [];
+    this.weatherMap = new Map();
   }
 }

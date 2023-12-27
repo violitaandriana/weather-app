@@ -1,17 +1,15 @@
 import { format } from 'date-fns';
 
-export default class Weather {
+export default class Forecast {
   // create a new current weather obj from param
   // param:
   // city = current weather city
-  // jsonResponseData = weather API json response
-  constructor(city, jsonResponseData) {
-    const currentDay = jsonResponseData.current;
+  // jsonForecastData = weather API json response for a particular forecast day data (data.forecast.forecastday) by array, e.g.: data.forecast.forecastday[1]
+  constructor(city, jsonForecastData) {
     this.city = city;
-    this.temp = currentDay.temp_c;
-    this.condition = currentDay.condition.text;
-    this.last_updated = currentDay.last_updated;
-    this.local_time = jsonResponseData.location.localtime;
+    this.temp = jsonForecastData.day.avgtemp_c;
+    this.condition = jsonForecastData.day.condition.text;
+    this.local_time = jsonForecastData.date;
 
     return this;
   }
@@ -27,10 +25,6 @@ export default class Weather {
 
   getCondition() {
     return this.condition;
-  }
-
-  getLastUpdated() {
-    return format(new Date(this.last_updated), 'HH:mm');
   }
 
   getLocalTimeDate() {
